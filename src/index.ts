@@ -23,7 +23,7 @@ function main(): void {
 
   const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
 
-  console.log("cwd", process.cwd());
+  console.log("cwd", process.cwd(), __dirname);
 
   const netlify = spawn(
     "./node_modules/.bin/netlify",
