@@ -17,9 +17,8 @@ function loadInputs(): Inputs {
 
 function main(): void {
   const inputs = loadInputs();
-  console.log(inputs);
   console.log("Hello!");
-  /*
+
   const netlify = spawn(
     "yarn",
     ["netlify", "deploy", `-dir=${inputs.DIST_DIR}`],
@@ -34,7 +33,9 @@ function main(): void {
   netlify.stdout.on("data", data => {
     console.log(`stdout: ${data}`);
   });
-  */
+  netlify.stderr.on("data", data => {
+    console.log(`stderr: ${data}`);
+  });
 }
 
 main();
