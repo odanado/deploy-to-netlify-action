@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import path from "path";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -24,17 +25,17 @@ function main(): void {
   const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
 
   console.log("cwd", process.cwd(), __dirname);
+  const distDir = path.join(process.cwd(), inputs.DIST_DIR);
 
-  const netlify = spawn(
-    "npx",
-    ["--quiet", "netlify", "deploy", "--json", `--dir=${inputs.DIST_DIR}`],
-    {
-      env: {
-        NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
-        NETLIFY_AUTH_TOKEN: inputs.NETLIFY_AUTH_TOKEN
-      }
-    }
-  );
+  const cwd = path.join(__dirname, "..", "node_modules", ".bin");
+  console.log("netlifyCmd", cwd);
+  const netlify = spawn("netlify", ["deploy", "--json", `--dir=${distDir}`], {
+    env: {
+      NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
+      NETLIFY_AUTH_TOKEN: inputs.NETLIFY_AUTH_TOKEN
+    },
+    cwd
+  });
 
   const lines: string[] = [];
 
