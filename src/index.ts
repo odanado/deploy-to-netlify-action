@@ -50,10 +50,12 @@ function main(): void {
 
     console.log(deployResult);
 
-    const { repo, owner } = github.context.repo;
-    const number = github.context.payload.issue?.number;
+    const repo = github.context.payload.repository?.name;
+    const owner = github.context.payload.repository?.owner.name;
+    const number = github.context.payload.pull_request?.number;
     console.log(github.context);
-    if (!number) return;
+    console.log(repo, owner, number);
+    if (!number || !owner || !repo) return;
     const draftUrl = deployResult["deploy_url"];
     clinet.issues.createComment({
       body: `Deployed: ${draftUrl}`,
