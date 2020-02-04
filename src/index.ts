@@ -51,7 +51,7 @@ function main(): void {
     console.log(deployResult);
 
     const repo = github.context.payload.repository?.name;
-    const owner = github.context.payload.repository?.owner.name;
+    const owner = github.context.payload.repository?.owner.login;
     const number = github.context.payload.pull_request?.number;
     console.log(github.context.payload.repository);
     console.log(repo, owner, number);
