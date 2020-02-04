@@ -29,7 +29,7 @@ function main() {
     const distDir = path_1.default.join(process.cwd(), inputs.DIST_DIR);
     const cwd = path_1.default.join(__dirname, "..", "node_modules", ".bin");
     console.log("netlifyCmd", cwd);
-    const netlify = child_process_1.spawn("netlify", ["deploy", "--json", `--dir=${distDir}`], {
+    const netlify = child_process_1.spawn("./netlify", ["deploy", "--json", `--dir=${distDir}`], {
         env: {
             NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
             NETLIFY_AUTH_TOKEN: inputs.NETLIFY_AUTH_TOKEN
