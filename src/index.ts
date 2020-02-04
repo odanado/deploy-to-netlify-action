@@ -21,7 +21,7 @@ function main(): void {
 
   const netlify = spawn(
     "yarn",
-    ["netlify", "deploy", `-dir=${inputs.DIST_DIR}`],
+    ["netlify", "deploy", `--dir=${inputs.DIST_DIR}`],
     {
       env: {
         NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
