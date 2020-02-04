@@ -1,11 +1,13 @@
 on: 
   pull_request:
     types: synchronize
+    branches:
+      - test/*
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: test job
+    name: Test deploy
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
