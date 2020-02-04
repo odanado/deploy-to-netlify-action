@@ -45,7 +45,10 @@ function main(): void {
   });
 
   netlify.on("close", () => {
+    console.log("close");
     const deployResult = JSON.parse(lines.join("\n"));
+
+    console.log(deployResult);
 
     const { repo, owner } = github.context.repo;
     const number = github.context.payload.pull_request?.number;
