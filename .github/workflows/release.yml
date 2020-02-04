@@ -11,3 +11,4 @@ jobs:
         uses: technote-space/release-github-actions@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEST_TAG_PREFIX: test/
