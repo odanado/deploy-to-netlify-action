@@ -38,6 +38,9 @@ function main() {
     netlify.stdout.on("data", (data) => {
         lines.push(data.toString());
     });
+    netlify.stderr.on("data", data => {
+        console.error(data.toString());
+    });
     netlify.on("close", () => {
         var _a, _b, _c;
         const deployResult = JSON.parse(lines.join("\n"));
