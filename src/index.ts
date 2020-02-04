@@ -52,6 +52,7 @@ function main(): void {
 
     const { repo, owner } = github.context.repo;
     const number = github.context.payload.issue?.number;
+    console.log(github.context);
     if (!number) return;
     const draftUrl = deployResult["deploy_url"];
     clinet.issues.createComment({
