@@ -38,23 +38,15 @@ function main(): void {
 
   netlify.stdout.on("data", (data: string) => {
     lines.push(data.toString());
-    console.log(`stdout: ${data}`);
-  });
-  netlify.stderr.on("data", data => {
-    console.log(`stderr: ${data}`);
   });
 
   netlify.on("close", () => {
-    console.log("close");
     const deployResult = JSON.parse(lines.join("\n"));
-
-    console.log(deployResult);
 
     const repo = github.context.payload.repository?.name;
     const owner = github.context.payload.repository?.owner.login;
     const number = github.context.payload.pull_request?.number;
-    console.log(github.context.payload.repository);
-    console.log(repo, owner, number);
+
     if (!number || !owner || !repo) return;
     const draftUrl = deployResult["deploy_url"];
     clinet.issues.createComment({
