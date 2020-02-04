@@ -53,7 +53,7 @@ function main(): void {
     const repo = github.context.payload.repository?.name;
     const owner = github.context.payload.repository?.owner.name;
     const number = github.context.payload.pull_request?.number;
-    console.log(github.context);
+    console.log(github.context.payload.repository);
     console.log(repo, owner, number);
     if (!number || !owner || !repo) return;
     const draftUrl = deployResult["deploy_url"];
