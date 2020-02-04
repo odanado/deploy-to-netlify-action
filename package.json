@@ -20,5 +20,8 @@
   },
   "scripts": {
     "build": "yarn tsc"
+  },
+  "resolutions": {
+    "@actions/github/@octokit/rest": "16.43.0"
   }
 }
