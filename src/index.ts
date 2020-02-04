@@ -24,8 +24,8 @@ function main(): void {
   const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
 
   const netlify = spawn(
-    "yarn",
-    ["--silent", "netlify", "deploy", "--json", `--dir=${inputs.DIST_DIR}`],
+    "./node_modules/.bin/netlify",
+    ["deploy", "--json", `--dir=${inputs.DIST_DIR}`],
     {
       env: {
         NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
