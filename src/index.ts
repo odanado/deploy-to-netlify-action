@@ -25,7 +25,7 @@ function main(): void {
 
   const netlify = spawn(
     "yarn",
-    ["netlify", "deploy", `--dir=${inputs.DIST_DIR}`],
+    ["--silent", "netlify", "deploy", "--json", `--dir=${inputs.DIST_DIR}`],
     {
       env: {
         NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
@@ -34,24 +34,29 @@ function main(): void {
     }
   );
 
+  const lines: string[] = [];
+
   netlify.stdout.on("data", (data: string) => {
+    lines.push(data.toString());
     console.log(`stdout: ${data}`);
-    const matched = data.match("Live Draft URL: (.*)");
-    if (matched) {
-      const { repo, owner } = github.context.repo;
-      const number = github.context.payload.pull_request?.number;
-      if (!number) return;
-      const draftUrl = matched[1];
-      clinet.issues.createComment({
-        body: `Deployed: ${draftUrl}`,
-        repo,
-        owner,
-        number: number
-      });
-    }
   });
   netlify.stderr.on("data", data => {
     console.log(`stderr: ${data}`);
+  });
+
+  netlify.on("close", () => {
+    const deployResult = JSON.parse(lines.join("\n"));
+
+    const { repo, owner } = github.context.repo;
+    const number = github.context.payload.pull_request?.number;
+    if (!number) return;
+    const draftUrl = deployResult["deploy_url"];
+    clinet.issues.createComment({
+      body: `Deployed: ${draftUrl}`,
+      repo,
+      owner,
+      number: number
+    });
   });
 }
 
