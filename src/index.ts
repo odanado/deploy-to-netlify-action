@@ -6,23 +6,22 @@ type Inputs = {
   DIST_DIR: string;
   NETLIFY_SITE_ID: string;
   NETLIFY_AUTH_TOKEN: string;
+  GITHUB_TOKEN: string;
 };
 
 function loadInputs(): Inputs {
   return {
     DIST_DIR: core.getInput("dist-dir"),
     NETLIFY_SITE_ID: core.getInput("netlify-site-id"),
-    NETLIFY_AUTH_TOKEN: core.getInput("netlify-auth-token")
+    NETLIFY_AUTH_TOKEN: core.getInput("netlify-auth-token"),
+    GITHUB_TOKEN: core.getInput("github-token")
   };
 }
 
-const token = process.env.GITHUB_TOKEN!;
-
-const clinet = new github.GitHub(token);
-
 function main(): void {
   const inputs = loadInputs();
-  console.log("Hello!");
+
+  const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
 
   const netlify = spawn(
     "yarn",
