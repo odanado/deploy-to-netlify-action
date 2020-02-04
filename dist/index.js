@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -8,6 +11,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const child_process_1 = require("child_process");
+const path_1 = __importDefault(require("path"));
 const core = __importStar(require("@actions/core"));
 const github = __importStar(require("@actions/github"));
 function loadInputs() {
@@ -22,11 +26,15 @@ function main() {
     const inputs = loadInputs();
     const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
     console.log("cwd", process.cwd(), __dirname);
-    const netlify = child_process_1.spawn("npx", ["--quiet", "netlify", "deploy", "--json", `--dir=${inputs.DIST_DIR}`], {
+    const distDir = path_1.default.join(process.cwd(), inputs.DIST_DIR);
+    const cwd = path_1.default.join(__dirname, "..", "node_modules", ".bin");
+    console.log("netlifyCmd", cwd);
+    const netlify = child_process_1.spawn("netlify", ["deploy", "--json", `--dir=${distDir}`], {
         env: {
             NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
             NETLIFY_AUTH_TOKEN: inputs.NETLIFY_AUTH_TOKEN
-        }
+        },
+        cwd
     });
     const lines = [];
     netlify.stdout.on("data", (data) => {
