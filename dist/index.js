@@ -21,6 +21,7 @@ function loadInputs() {
 function main() {
     const inputs = loadInputs();
     const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
+    console.log("cwd", process.cwd);
     const netlify = child_process_1.spawn("./node_modules/.bin/netlify", ["deploy", "--json", `--dir=${inputs.DIST_DIR}`], {
         env: {
             NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
