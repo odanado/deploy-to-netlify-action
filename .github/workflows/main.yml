@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: test job
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - uses: ./

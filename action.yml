@@ -1,0 +1,12 @@
+name: 'Deploy to Netlify'
+description: 'Deploy to Netlify'
+inputs:
+  dist-dir:
+    required: true
+  netlify-site-id:
+    required: true
+  netlify-auth-token:
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
