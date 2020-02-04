@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import path from "path";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -25,8 +26,16 @@ function main(): void {
 
   console.log("cwd", process.cwd(), __dirname);
 
+  const netlifyCmd = path.join(
+    __dirname,
+    "..",
+    "node_modules",
+    ".bin",
+    "netlify"
+  );
+  console.log("netlifyCmd", netlifyCmd);
   const netlify = spawn(
-    "./node_modules/.bin/netlify",
+    netlifyCmd,
     ["deploy", "--json", `--dir=${inputs.DIST_DIR}`],
     {
       env: {
