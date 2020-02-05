@@ -44,12 +44,13 @@ async function main() {
     const number = (_c = github.context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.number;
     if (!number || !owner || !repo)
         return;
-    const draftUrl = deployResult.reviewUrl;
+    const draftUrl = deployResult.deployUrl;
     clinet.issues.createComment({
         body: `Deployed: ${draftUrl}`,
         repo,
         owner,
-        number
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        issue_number: number
     });
 }
 main();
