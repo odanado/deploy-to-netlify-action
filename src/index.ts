@@ -1,7 +1,10 @@
-import { spawn } from "child_process";
 import path from "path";
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Netlify = require("netlify");
 
 type Inputs = {
   DIST_DIR: string;
@@ -19,49 +22,42 @@ function loadInputs(): Inputs {
   };
 }
 
-function main(): void {
+type DeployResult = {
+  deployUrl: string;
+  reviewUrl: string;
+};
+
+async function deploy(inputs: Inputs, isProd: boolean): Promise<DeployResult> {
+  const client = new Netlify(inputs.NETLIFY_AUTH_TOKEN);
+
+  const distDir = path.resolve(process.cwd(), inputs.DIST_DIR);
+  const res = client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
+    draft: !isProd
+  });
+  return {
+    deployUrl: res.deploy_url,
+    reviewUrl: res.review_url
+  };
+}
+
+async function main(): Promise<void> {
   const inputs = loadInputs();
 
   const clinet = new github.GitHub(inputs.GITHUB_TOKEN);
 
-  console.log("cwd", process.cwd(), __dirname);
-  const distDir = path.join(process.cwd(), inputs.DIST_DIR);
+  const deployResult = await deploy(inputs, false);
 
-  const cwd = path.join(__dirname, "..", "node_modules", ".bin");
-  console.log("netlifyCmd", cwd);
-  const netlify = spawn("./netlify", ["deploy", "--json", `--dir=${distDir}`], {
-    env: {
-      NETLIFY_SITE_ID: inputs.NETLIFY_SITE_ID,
-      NETLIFY_AUTH_TOKEN: inputs.NETLIFY_AUTH_TOKEN
-    },
-    cwd
-  });
+  const repo = github.context.payload.repository?.name;
+  const owner = github.context.payload.repository?.owner.login;
+  const number = github.context.payload.pull_request?.number;
 
-  const lines: string[] = [];
-
-  netlify.stdout.on("data", (data: string) => {
-    lines.push(data.toString());
-  });
-
-  netlify.stderr.on("data", data => {
-    console.error(data.toString());
-  });
-
-  netlify.on("close", () => {
-    const deployResult = JSON.parse(lines.join("\n"));
-
-    const repo = github.context.payload.repository?.name;
-    const owner = github.context.payload.repository?.owner.login;
-    const number = github.context.payload.pull_request?.number;
-
-    if (!number || !owner || !repo) return;
-    const draftUrl = deployResult["deploy_url"];
-    clinet.issues.createComment({
-      body: `Deployed: ${draftUrl}`,
-      repo,
-      owner,
-      number: number
-    });
+  if (!number || !owner || !repo) return;
+  const draftUrl = deployResult.reviewUrl;
+  clinet.issues.createComment({
+    body: `Deployed: ${draftUrl}`,
+    repo,
+    owner,
+    number
   });
 }
 
