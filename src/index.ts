@@ -52,12 +52,13 @@ async function main(): Promise<void> {
   const number = github.context.payload.pull_request?.number;
 
   if (!number || !owner || !repo) return;
-  const draftUrl = deployResult.reviewUrl;
+  const draftUrl = deployResult.deployUrl;
   clinet.issues.createComment({
     body: `Deployed: ${draftUrl}`,
     repo,
     owner,
-    number
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    issue_number: number
   });
 }
 
