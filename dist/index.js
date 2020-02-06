@@ -26,7 +26,7 @@ function loadInputs() {
 async function deploy(inputs, isProd) {
     const client = new Netlify(inputs.NETLIFY_AUTH_TOKEN);
     const distDir = path_1.default.resolve(process.cwd(), inputs.DIST_DIR);
-    const res = client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
+    const res = await client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
         draft: !isProd
     });
     console.log(res);
