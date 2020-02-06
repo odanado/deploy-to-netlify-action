@@ -24,7 +24,6 @@ function loadInputs(): Inputs {
 
 type DeployResult = {
   deployUrl: string;
-  reviewUrl: string;
 };
 
 async function deploy(inputs: Inputs, isProd: boolean): Promise<DeployResult> {
@@ -35,8 +34,7 @@ async function deploy(inputs: Inputs, isProd: boolean): Promise<DeployResult> {
     draft: !isProd
   });
   return {
-    deployUrl: res.deploy_url,
-    reviewUrl: res.review_url
+    deployUrl: res.deploy.deploy_ssl_url
   };
 }
 
