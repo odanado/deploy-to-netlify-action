@@ -29,6 +29,7 @@ async function deploy(inputs, isProd) {
     const res = client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
         draft: !isProd
     });
+    console.log(res);
     return {
         deployUrl: res.deploy.deploy_ssl_url
     };
