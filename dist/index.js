@@ -30,8 +30,7 @@ async function deploy(inputs, isProd) {
         draft: !isProd
     });
     return {
-        deployUrl: res.deploy_url,
-        reviewUrl: res.review_url
+        deployUrl: res.deploy.deploy_ssl_url
     };
 }
 async function main() {
