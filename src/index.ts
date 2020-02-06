@@ -30,7 +30,7 @@ async function deploy(inputs: Inputs, isProd: boolean): Promise<DeployResult> {
   const client = new Netlify(inputs.NETLIFY_AUTH_TOKEN);
 
   const distDir = path.resolve(process.cwd(), inputs.DIST_DIR);
-  const res = client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
+  const res = await client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
     draft: !isProd
   });
   console.log(res);
