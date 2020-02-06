@@ -33,6 +33,7 @@ async function deploy(inputs: Inputs, isProd: boolean): Promise<DeployResult> {
   const res = client.deploy(inputs.NETLIFY_SITE_ID, distDir, {
     draft: !isProd
   });
+  console.log(res);
   return {
     deployUrl: res.deploy.deploy_ssl_url
   };
